@@ -1,7 +1,17 @@
 # Source:
 # https://github.com/vzhogin/elk-nginx-docker/blob/master/kibana.yml
-server.host: "0.0.0.0"
-elasticsearch.url: "http://elasticsearch:9200"
+#server.host: "0.0.0.0"
+#elasticsearch.url: "http://elasticsearch:9200"
+
+# https://habr.com/ru/company/otus/blog/542144/
+
+server.name: kibana
+server.host: "0"
+elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+xpack.monitoring.ui.container.elasticsearch.enabled: true
+ 
+elasticsearch.username: elastic
+elasticsearch.password: yourstrongpasswordhere
 
 # Kibana is served by a back end server. This controls which port to use.
 # server.port: 5601

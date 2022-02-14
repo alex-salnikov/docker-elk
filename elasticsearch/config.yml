@@ -1,7 +1,12 @@
 # Source:
 # https://github.com/vzhogin/elk-nginx-docker/blob/master/elasticsearch.yml
+# https://habr.com/ru/company/otus/blog/542144/
+cluster.name: "docker-cluster"
 network.host: 0.0.0.0
-
+ 
+#xpack.license.self_generated.type: basic
+#xpack.security.enabled: true
+#xpack.monitoring.collection.enabled: true
 
 # ======================== Elasticsearch Configuration =========================
 #

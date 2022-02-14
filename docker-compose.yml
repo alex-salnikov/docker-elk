@@ -1,29 +1,60 @@
 version: "3.7"
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.5.1
+    container_name: elk-elasticsearch
+    hostname: elk-elasticsearch
+    environment:
+#     - ES_JAVA_OPTS: "-Xmx1g -Xms1g"
+#      - ES_JAVA_OPTS="-Xmx256m -Xms256m"
+#      - ELASTIC_PASSWORD: yourstrongpasswordhere
+#      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+#      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ports:
+#      - 127.0.0.1:9200:9200
+#      - 127.0.0.1:9300:9300
+      - 9200:9200
+#      - 9300:9300
+    volumes:
+      - ./elasticsearch/config.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+#      - ./elasticsearch/data:/usr/share/elasticsearch/data
+    networks:
+      - elk
+
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:7.6.2
+    image: docker.elastic.co/kibana/kibana-oss:7.5.1
+    container_name: elk-kibana
     ports:
       - 5601:5601
-    volumes:
-      - ./kibana/config.yml:/usr/share/kibana/config/kibana.yml:ro
+    environment:
+#      - ELASTICSEARCH_HOSTS=https://es01:9200
+      - ELASTICSEARCH_HOSTS=http://elk-elasticsearch:9200
+#      - ELASTICSEARCH_USERNAME=kibana_system
+#      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+#    volumes:
+#      - ./kibana/config.yml:/usr/share/kibana/config/kibana.yml:ro
     depends_on:
       - elasticsearch
     networks:
       - elk
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.0
-    environment:
-      ES_JAVA_OPTS: "-Xmx1g -Xms1g"
-      discovery.type: "single-node"
-    ports:
-      - 127.0.0.1:9200:9200
-      - 127.0.0.1:9300:9300
-    volumes:
-      - ./elasticsearch/config.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
-      - ./elasticsearch/data:/usr/share/elasticsearch/data
-    networks:
-      - elk
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:7.5.1
+#    container_name: elk-logstash
+#    ports:
+#      - 5000:5000
+#      - 9600:9600
+#      - 5046:5046
+#    environment:
+#      - LS_JAVA_OPTS="-Xmx256m -Xms256m"
+#    volumes:
+#      - ./logstash/config.yml:/usr/share/logstash/config/logstash.yml:ro
+#      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+#    networks:
+#      - elk
+#    depends_on:
+#      - elasticsearch
 
 # volumes:
 #   esdata:
@@ -33,5 +64,17 @@ networks:
     driver: bridge
 
 
+# docker-compose up -d --remove-orphans
+
 # https://www.edc4it.com/blog/docker-kibana-elasticsearch-beats-tutorial
 # https://faun.pub/nginx-logs-monitoring-using-elk-stack-docker-4b64f46e989
+
+# https://habr.com/ru/company/otus/blog/542144/
+
+# curl 'localhost:9200/_cat/indices?v' -u elastic:yourstrongpasswordhere
+
+
+# ElasticsearchException[failed to bind service
+# sudo chown 1000:1000 elasticsearch/data/
+
+# https://levelup.gitconnected.com/docker-compose-made-easy-with-elasticsearch-and-kibana-4cb4110a80dd
