@@ -1,0 +1,13 @@
+version: '2'
+services:
+    filebeat:
+        build: .
+        image: [ваш imageId образа filebeat]
+        volumes:
+            - /path/to/myElk/log/nginx:/etc/logs/nginx # логи nginx
+            - /path/to/myElk/filebeat:/etc/filebeat
+            - /path/to/myElk/filebeat/tmp:/tmp/filebeat
+
+
+
+# https://habr.com/ru/post/282866/
